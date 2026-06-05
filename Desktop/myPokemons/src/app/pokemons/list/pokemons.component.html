@@ -10,8 +10,6 @@
 
 <filter-pokemon></filter-pokemon>
 
-<!-- Tri réactif : chaque bouton pousse un nouveau critère dans le BehaviorSubject -->
-<!-- combineLatest détecte le changement et map() retrie automatiquement -->
 <div class="center section">
   <span style="margin-right: 10px; font-weight: bold;">Trier par :</span>
   <a (click)="trierPar('id')"     class="btn-small waves-effect waves-light grey darken-1"    style="margin: 4px;">Numéro</a>
@@ -22,7 +20,6 @@
 </div>
 
 <div class="container">
-  <!-- [@listeAnimation] : animation d'apparition en cascade à chaque nouveau tri -->
   @if (pokemonsTries$ | async; as pokemons) {
     <div class="row" [@listeAnimation]="pokemons.length">
       @for (pokemon of pokemons; track pokemon.id) {

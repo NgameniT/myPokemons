@@ -7,11 +7,6 @@ import { PokemonsService } from "../pokemons.service";
 import { PokemonTypeColor } from "../pipes/pokemon-type-color.pipe";
 import { PokemonRarity } from "../pipes/pokemon-rarity.pipe";
 
-// Programmation réactive :
-// Subject = déclencheur manuel qu'on "pousse" avec .next()
-// switchMap = enchaîne un Observable avec un autre (ici le Subject avec l'appel HTTP)
-// Même pattern que le SearchPokemonComponent du prof
-
 @Component({
   standalone: true,
   selector: 'add-pokemon',
@@ -22,8 +17,6 @@ export class AddPokemonComponent implements OnInit {
 
   pokemonForm!: FormGroup;
   types: string[] = [];
-
-  // Subject = source du flux réactif, remplace un simple appel de fonction
   private addTrigger = new Subject<Pokemon>();
 
   constructor(
@@ -35,7 +28,6 @@ export class AddPokemonComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Initialisation du formulaire réactif avec validateurs
     this.pokemonForm = this.fb.group({
       name:    ['',   [Validators.required, Validators.pattern('^[a-zA-Zàéèç ]{1,30}$')]],
       hp:      [null, [Validators.required, Validators.min(1), Validators.max(999)]],
@@ -45,8 +37,6 @@ export class AddPokemonComponent implements OnInit {
       types:   [[]]
     });
 
-    // Pipeline réactif : chaque fois qu'on pousse dans addTrigger,
-    // switchMap déclenche l'appel HTTP et annule le précédent si besoin
     this.addTrigger.pipe(
       switchMap(pokemon => this.pokemonsService.addPokemon(pokemon))
     ).subscribe(newPokemon => {
@@ -54,7 +44,6 @@ export class AddPokemonComponent implements OnInit {
     });
   }
 
-  // Getters pour accéder aux contrôles facilement dans le template
   get name()    { return this.pokemonForm.get('name'); }
   get hp()      { return this.pokemonForm.get('hp'); }
   get cp()      { return this.pokemonForm.get('cp'); }
@@ -70,7 +59,6 @@ export class AddPokemonComponent implements OnInit {
     const checked = event.target.checked;
     const typesControl = this.pokemonForm.get('types');
     const currentTypes: string[] = typesControl?.value || [];
-
     if (checked) {
       typesControl?.setValue([...currentTypes, type]);
     } else {
@@ -86,7 +74,6 @@ export class AddPokemonComponent implements OnInit {
   }
 
   onSubmit(): void {
-    // On pousse les valeurs du formulaire dans le Subject => déclenche le pipeline RxJS
     this.addTrigger.next(this.pokemonForm.value as Pokemon);
   }
 

@@ -6,7 +6,6 @@ export class Pokemon{
   name: string;
   picture: string;
   types: Array<string>;
-  // Rareté : de 1 (commun) à 5 (légendaire), représentée par des étoiles
   rarity: number;
   isFavorite: boolean;
   created: Date;
@@ -23,6 +22,4 @@ export class Pokemon{
     this.created = new Date();
 
   }
-// https://codeshare.io/5gyRyB
-
 }

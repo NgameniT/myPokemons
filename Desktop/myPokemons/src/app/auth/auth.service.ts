@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Observable, from, of } from "rxjs";
-import { tap, catchError, map } from "rxjs";
+import { tap, catchError } from "rxjs";
 import { SupabaseService } from "../supabase.service";
 
 @Injectable({ providedIn: 'root' })
@@ -23,7 +23,6 @@ export class AuthService {
     };
   }
 
-  // Inscrit un nouvel utilisateur dans la table users
   register(email: string, password: string): Observable<any>{
     return from(
       this.db.insert([{ email, password }]).select().single()
@@ -37,7 +36,6 @@ export class AuthService {
     );
   }
 
-  // Vérifie les identifiants et retourne l'utilisateur si trouvé
   login(email: string, password: string): Observable<any>{
     return from(
       this.db.select('*').eq('email', email).eq('password', password).single()
@@ -51,18 +49,15 @@ export class AuthService {
     );
   }
 
-  // Sauvegarde l'utilisateur connecté dans le localStorage
   saveSession(user: any): void {
     localStorage.setItem('currentUser', JSON.stringify(user));
   }
 
-  // Récupère l'utilisateur connecté
   getCurrentUser(): any {
     const user = localStorage.getItem('currentUser');
     return user ? JSON.parse(user) : null;
   }
 
-  // Déconnexion
   logout(): void {
     localStorage.removeItem('currentUser');
   }

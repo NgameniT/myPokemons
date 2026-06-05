@@ -11,18 +11,12 @@ import { Subject, BehaviorSubject, combineLatest, switchMap, Observable } from "
 import { map } from "rxjs/operators";
 import { trigger, transition, style, animate, query, stagger } from "@angular/animations";
 
-// Programmation réactive — Tâche 17 : tri réactif
-// BehaviorSubject = émet immédiatement sa valeur courante aux nouveaux abonnés
-// combineLatest = réémet dès que la liste OU le critère change
-// map() = retrie le tableau sans modifier les données sources
-
 @Component({
   standalone: true,
   selector: 'list-pokemons',
   templateUrl: './pokemons.component.html',
   imports: [DatePipe, AsyncPipe, PokemonTypeColor, BorderCardDirective, SearchPokemonComponent, FilterPokemonComponent],
   animations: [
-    // Animation d'apparition des cartes en cascade
     trigger('listeAnimation', [
       transition('* => *', [
         query(':enter', [
@@ -37,43 +31,30 @@ import { trigger, transition, style, animate, query, stagger } from "@angular/an
 })
 export class PokemonsComponent implements OnInit {
 
-  // BehaviorSubject : source réactive de la liste (mise à jour après suppression)
   private pokemons$ = new BehaviorSubject<Pokemon[]>([]);
-
-  // BehaviorSubject : critère de tri courant, 'id' par défaut
   private sortCritere$ = new BehaviorSubject<string>('id');
-
-  // Observable combiné exposé au template via | async
   pokemonsTries$!: Observable<Pokemon[]>;
-
-  // Subject = déclencheur du flux réactif de suppression
   private deleteTrigger = new Subject<Pokemon>();
 
   constructor(private router: Router, private pokemonService: PokemonsService) {}
 
   ngOnInit(): void {
-    // Chargement initial : on pousse la liste dans le BehaviorSubject
     this.pokemonService.getPokemons().subscribe(pokemons => {
       this.pokemons$.next(pokemons);
     });
 
-    // combineLatest : à chaque changement de liste OU de critère, map() retrie automatiquement
     this.pokemonsTries$ = combineLatest([this.pokemons$, this.sortCritere$]).pipe(
       map(([pokemons, critere]) => this.trier(pokemons, critere))
     );
 
-    // Pipeline réactif pour la suppression
-    // switchMap = annule la requête précédente si on clique vite
     this.deleteTrigger.pipe(
       switchMap(pokemon => this.pokemonService.deletePokemon(pokemon))
     ).subscribe((pokemonSupprime: any) => {
-      // Mise à jour réactive : on émet une nouvelle liste sans le pokémon supprimé
       const liste = this.pokemons$.getValue().filter(p => p.id !== pokemonSupprime.id);
       this.pokemons$.next(liste);
     });
   }
 
-  // Tri pur sans effet de bord — renvoie un nouveau tableau trié
   private trier(pokemons: Pokemon[], critere: string): Pokemon[] {
     return [...pokemons].sort((a, b) => {
       switch (critere) {
@@ -86,7 +67,6 @@ export class PokemonsComponent implements OnInit {
     });
   }
 
-  // Pousse un nouveau critère → combineLatest se réémet → map() retrie
   trierPar(critere: string): void {
     this.sortCritere$.next(critere);
   }
@@ -100,7 +80,6 @@ export class PokemonsComponent implements OnInit {
   }
 
   deletePokemon(event: Event, pokemon: Pokemon) {
-    // stopPropagation : empêche le clic de remonter à la carte (qui naviguerait vers le détail)
     event.stopPropagation();
     this.deleteTrigger.next(pokemon);
   }

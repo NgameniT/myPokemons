@@ -4,10 +4,6 @@ import { Observable, from, of } from "rxjs";
 import { map, tap, catchError } from "rxjs";
 import { SupabaseService } from "../supabase.service";
 
-// from() convertit une Promise en Observable (RxJS)
-// On appelle .then() explicitement sur chaque requête Supabase
-// pour s'assurer que la conversion Promise → Observable fonctionne correctement
-
 @Injectable({ providedIn: 'root' })
 export class PokemonsService {
 
@@ -32,7 +28,6 @@ export class PokemonsService {
     return { ...data, created: new Date(data.created) } as Pokemon;
   }
 
-  // Récupère tous les pokémons
   getPokemons(): Observable<Pokemon[]>{
     return from(
       this.db.select('*').order('id').then(({ data, error }) => {
@@ -45,7 +40,6 @@ export class PokemonsService {
     );
   }
 
-  // Récupère un pokémon par son id
   getPokemon(id: number): Observable<Pokemon>{
     return from(
       this.db.select('*').eq('id', id).single().then(({ data, error }) => {
@@ -58,12 +52,10 @@ export class PokemonsService {
     );
   }
 
-  // Retourne la liste des types disponibles
   getPokemonTypes(): string[]{
     return ['Plante', 'Feu', 'Eau', 'Poison', 'Psy', 'Electrik', 'Normal', 'Fée', 'Vol', 'Insecte'];
   }
 
-  // Met à jour un pokémon
   updatePokemon(pokemon: Pokemon): Observable<Pokemon>{
     const { id, ...fields } = pokemon as any;
     return from(
@@ -77,7 +69,6 @@ export class PokemonsService {
     );
   }
 
-  // Supprime un pokémon et retourne le pokémon supprimé
   deletePokemon(pokemon: Pokemon): Observable<Pokemon>{
     return from(
       this.db.delete().eq('id', pokemon.id).then(({ error }) => {
@@ -90,7 +81,6 @@ export class PokemonsService {
     );
   }
 
-  // Ajoute un nouveau pokémon
   addPokemon(pokemon: Pokemon): Observable<Pokemon>{
     const { id, ...fields } = pokemon as any;
     return from(
@@ -104,7 +94,6 @@ export class PokemonsService {
     );
   }
 
-  // Inverse le statut favori puis sauvegarde
   toggleFavorite(pokemon: Pokemon): Observable<Pokemon>{
     pokemon.isFavorite = !pokemon.isFavorite;
     return this.updatePokemon(pokemon).pipe(
@@ -112,14 +101,12 @@ export class PokemonsService {
     );
   }
 
-  // Récupère uniquement les pokémons favoris
   getFavoritePokemons(): Observable<Pokemon[]>{
     return this.getPokemons().pipe(
       map(pokemons => pokemons.filter(p => p.isFavorite))
     );
   }
 
-  // Recherche par nom
   searchPokemons(term: string): Observable<Pokemon[]>{
     if(!term.trim()) return of([]);
     return this.getPokemons().pipe(
@@ -129,7 +116,6 @@ export class PokemonsService {
     );
   }
 
-  // Recherche par type OU rareté (tâche 9)
   searchByTypeOrRarity(term: string): Observable<Pokemon[]>{
     if(!term.trim()) return of([]);
     return this.getPokemons().pipe(

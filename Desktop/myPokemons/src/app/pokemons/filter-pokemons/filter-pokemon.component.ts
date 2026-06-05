@@ -8,12 +8,6 @@ import { PokemonsService } from "../pokemons.service";
 import { PokemonTypeColor } from "../pipes/pokemon-type-color.pipe";
 import { PokemonRarity } from "../pipes/pokemon-rarity.pipe";
 
-// Programmation réactive — même pattern exact que le prof (SearchPokemonComponent) :
-// Subject<string> = déclencheur alimenté à chaque frappe
-// debounceTime    = attend 200ms après la dernière frappe avant d'agir
-// distinctUntilChanged = n'agit pas si la valeur n'a pas changé
-// switchMap       = annule la recherche précédente, lance la nouvelle
-
 @Component({
   standalone: true,
   selector: 'filter-pokemon',
@@ -27,7 +21,6 @@ export class FilterPokemonComponent implements OnInit {
 
   constructor(private router: Router, private pokemonsService: PokemonsService){}
 
-  // On pousse le terme dans le Subject à chaque frappe
   search(term: string): void {
     this.searchTerms.next(term);
   }

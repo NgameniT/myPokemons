@@ -3,8 +3,6 @@ import { RouterOutlet, RouterLink, Router } from '@angular/router';
 import { AuthService } from './auth/auth.service';
 import { trigger, transition, style, animate, query } from '@angular/animations';
 
-// Animation de transition entre les pages (tâche 16)
-// query(':enter') cible la page qui arrive, :leave celle qui part
 const pageTransition = trigger('pageTransition', [
   transition('* => *', [
     query(':enter', [
@@ -39,7 +37,6 @@ export class App {
     this.router.navigate(['/login']);
   }
 
-  // Retourne l'URL courante pour servir d'état à l'animation de route
   get routeState(): string {
     return this.router.url;
   }
