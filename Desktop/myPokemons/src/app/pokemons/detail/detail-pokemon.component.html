@@ -1,0 +1,89 @@
+@if (pokemon) {
+<div class="row">
+  <div class="col s12 m8 offset-m2">
+    <h2 class="header center"> {{ pokemon.name }} </h2>
+    <div class="card horizontal hoverable">
+      <div class="card-image">
+        <img [src]="pokemon.picture">
+      </div>
+      <div class="card-stacked">
+        <div class="card-content">
+          <table class="bordered striped">
+            <tbody>
+              <tr>
+                <td>Nom</td>
+                <td><strong>{{ pokemon.name}}</strong></td>
+              </tr>
+              <tr>
+                <td>Point de vie</td>
+                <td><strong>{{ pokemon.hp}}</strong></td>
+              </tr>
+              <tr>
+                <td>Dégâts</td>
+                <td><strong>{{ pokemon.cp}}</strong></td>
+              </tr>
+              <tr>
+                <td>Type</td>
+                <td>
+                  @for (type of pokemon.types; track $index) {
+                    <span class="{{ type | pokemonTypeColor }}" >{{type}}</span>
+                  }
+                </td>
+              </tr>
+              <tr>
+                <td>Rareté</td>
+                <td [innerHTML]="pokemon.rarity | pokemonRarity"></td>
+              </tr>
+              <tr>
+                <td>Date de création</td>
+                <td><strong>{{ pokemon.created | date: 'dd/MM/yy'}}</strong></td>
+              </tr>
+              <tr>
+                <div class="card-action">
+                  <a (click)="goBack()" class="waves-effect btn waves-light">Retour</a>
+                  <a (click)="goEdit(pokemon)" class="waves-effect btn waves-light">Editer</a>
+                  <a (click)="toggleFavorite()"
+                     class="waves-effect btn waves-light"
+                     [class.yellow]="pokemon.isFavorite"
+                     [class.darken-1]="pokemon.isFavorite"
+                     title="{{ pokemon.isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris' }}">
+                    {{ pokemon.isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris' }}
+                  </a>
+                </div>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation Précédent / Suivant -->
+    <div class="center section">
+      @if (previousId) {
+        <a (click)="goPrevious()" class="btn waves-effect waves-light grey darken-1">
+          ← Précédent
+        </a>
+      } @else {
+        <a class="btn waves-effect waves-light grey lighten-1 disabled">
+          ← Précédent
+        </a>
+      }
+
+      &nbsp;&nbsp;
+
+      @if (nextId) {
+        <a (click)="goNext()" class="btn waves-effect waves-light grey darken-1">
+          Suivant →
+        </a>
+      } @else {
+        <a class="btn waves-effect waves-light grey lighten-1 disabled">
+          Suivant →
+        </a>
+      }
+    </div>
+
+  </div>
+</div>
+}@else{
+  <p class="center">Pokemon non trouvé</p>
+}

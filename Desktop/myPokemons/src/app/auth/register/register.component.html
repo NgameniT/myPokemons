@@ -1,0 +1,66 @@
+<div class="row">
+  <div class="col s8 offset-s2 m6 offset-m3">
+    <h2 class="center">Inscription</h2>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <div class="card-panel">
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email"
+                 class="form-control"
+                 id="email"
+                 formControlName="email">
+          <div [hidden]="email?.valid || email?.pristine"
+               class="card-panel red accent-3">
+            Un email valide est requis
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Mot de passe</label>
+          <input type="password"
+                 class="form-control"
+                 id="password"
+                 formControlName="password">
+          <div [hidden]="password?.valid || password?.pristine"
+               class="card-panel red accent-3">
+            Le mot de passe doit contenir au moins 6 caractères
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="confirmPassword">Confirmer le mot de passe</label>
+          <input type="password"
+                 class="form-control"
+                 id="confirmPassword"
+                 formControlName="confirmPassword">
+          <div [hidden]="!registerForm.hasError('passwordsMismatch') || confirmPassword?.pristine"
+               class="card-panel red accent-3">
+            Les mots de passe ne correspondent pas
+          </div>
+        </div>
+
+        @if (errorMessage) {
+          <div class="card-panel red accent-3">{{ errorMessage }}</div>
+        }
+
+        @if (successMessage) {
+          <div class="card-panel green accent-3">{{ successMessage }}</div>
+        }
+
+      </div>
+
+      <div class="center section">
+        <button [disabled]="!registerForm.valid"
+                class="btn waves-effect waves-light">
+          S'inscrire
+        </button>
+        <a (click)="goToLogin()" class="btn waves-effect waves-light grey">
+          Se connecter
+        </a>
+      </div>
+
+    </form>
+  </div>
+</div>

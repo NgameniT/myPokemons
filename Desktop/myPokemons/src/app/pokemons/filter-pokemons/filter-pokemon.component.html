@@ -1,0 +1,27 @@
+<div class="row">
+  <div class="col s8 offset-s2">
+    <div class="row">
+      <div class="input-field col s12">
+        <input type="text"
+               id="filter-input"
+               class="autocomplete"
+               placeholder="Rechercher par type (ex: Feu) ou rareté (ex: 3)"
+               (keyup)="search(filterbox.value)"
+               #filterbox>
+      </div>
+
+      <div class="collection">
+        @for (pokemon of pokemons | async; track pokemon.id) {
+          <a (click)="goToDetail(pokemon)" class="collection-item">
+            <img [src]="pokemon.picture" style="width: 30px;">
+            {{ pokemon.name }}
+            <span [innerHTML]="pokemon.rarity | pokemonRarity" style="margin-left: 8px;"></span>
+            @for (type of pokemon.types; track $index) {
+              <span class="{{ type | pokemonTypeColor }}">{{ type }}</span>
+            }
+          </a>
+        }
+      </div>
+    </div>
+  </div>
+</div>

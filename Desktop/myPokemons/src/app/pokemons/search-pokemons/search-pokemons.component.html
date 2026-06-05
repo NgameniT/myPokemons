@@ -1,0 +1,20 @@
+<div class="row">
+  <div class="col s8 offset-s2">
+    <div class="row">
+      <div class="input-field col s12">
+        <input type="text" 
+               id="autocomplete-input" 
+               class="autocomplete" 
+               placeholder="Chercher un pokemon" (keyup)="search(searchbox.value)" #searchbox>
+      </div>
+
+      <div class="collection">
+        @for (pokemon of pokemons | async ; track $index) {
+          <a (click)="goToDetail(pokemon)" class="collection-item">
+            <img [src]="pokemon.picture" style="width: 30px;"> {{ pokemon.name }}
+          </a>
+        }
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,37 @@
+<h1 class="center">Pokémons Favoris</h1>
+
+@if (pokemons.length === 0) {
+  <p class="center grey-text">Aucun pokémon favori pour l'instant.<br>
+    Ouvre le détail d'un pokémon et clique sur Favori.
+  </p>
+}
+
+<div class="container">
+  <div class="row">
+    @for (pokemon of pokemons; track pokemon.id) {
+      <div class="col s6 m4">
+        <pkmnBorderCard class="card horizontal" (click)="selectPokemon(pokemon)">
+
+          <div class="card-image">
+            <img [src]="pokemon.picture" alt="img">
+          </div>
+          <div class="card-stacked">
+            <div class="card-content">
+              <p>{{ pokemon.name }}</p>
+              <p><small>{{ pokemon.created | date: "dd/MM/yy" }}</small></p>
+              <p [innerHTML]="pokemon.rarity | pokemonRarity"></p>
+              @for (type of pokemon.types; track $index) {
+                <span class="{{ type | pokemonTypeColor }}">{{ type }}</span>
+              }
+            </div>
+          </div>
+
+        </pkmnBorderCard>
+      </div>
+    }
+  </div>
+</div>
+
+<div class="center section">
+  <a (click)="goBack()" class="btn waves-effect waves-light">Retour à la liste</a>
+</div>

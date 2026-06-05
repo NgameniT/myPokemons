@@ -1,0 +1,95 @@
+<h1 class="center">Comparateur de Pokémons</h1>
+<p class="center grey-text">Sélectionnez 2 pokémons pour comparer leurs stats</p>
+
+<!-- Liste de sélection -->
+<div class="container">
+  <div class="row">
+    @for (pokemon of pokemons; track pokemon.id) {
+      <div class="col s6 m3">
+        <div class="card hoverable"
+             [class.teal]="isSelected(pokemon)"
+             [class.lighten-4]="isSelected(pokemon)"
+             [class.grey]="isDisabled(pokemon)"
+             [class.lighten-3]="isDisabled(pokemon)"
+             style="cursor: pointer;"
+             (click)="!isDisabled(pokemon) && toggleSelection(pokemon)">
+          <div class="card-content center">
+            <img [src]="pokemon.picture" style="width: 60px;">
+            <p><strong>{{ pokemon.name }}</strong></p>
+            @for (type of pokemon.types; track $index) {
+              <span class="{{ type | pokemonTypeColor }}">{{ type }}</span>
+            }
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>
+
+<!-- Tableau de comparaison — s'affiche uniquement quand 2 pokémons sont sélectionnés -->
+@if ((selection$ | async)?.length === 2) {
+  <div class="container section">
+    <h4 class="center">Comparaison</h4>
+    <table class="bordered striped centered">
+      <thead>
+        <tr>
+          <th>Stat</th>
+          <th class="center">
+            <img [src]="(selection$ | async)![0].picture" style="width:50px;"><br>
+            {{ (selection$ | async)![0].name }}
+          </th>
+          <th class="center">
+            <img [src]="(selection$ | async)![1].picture" style="width:50px;"><br>
+            {{ (selection$ | async)![1].name }}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Points de vie</td>
+          <td [class.teal-text]="(selection$ | async)![0].hp > (selection$ | async)![1].hp"
+              [class.red-text]="(selection$ | async)![0].hp < (selection$ | async)![1].hp">
+            <strong>{{ (selection$ | async)![0].hp }}</strong>
+          </td>
+          <td [class.teal-text]="(selection$ | async)![1].hp > (selection$ | async)![0].hp"
+              [class.red-text]="(selection$ | async)![1].hp < (selection$ | async)![0].hp">
+            <strong>{{ (selection$ | async)![1].hp }}</strong>
+          </td>
+        </tr>
+        <tr>
+          <td>Dégâts</td>
+          <td [class.teal-text]="(selection$ | async)![0].cp > (selection$ | async)![1].cp"
+              [class.red-text]="(selection$ | async)![0].cp < (selection$ | async)![1].cp">
+            <strong>{{ (selection$ | async)![0].cp }}</strong>
+          </td>
+          <td [class.teal-text]="(selection$ | async)![1].cp > (selection$ | async)![0].cp"
+              [class.red-text]="(selection$ | async)![1].cp < (selection$ | async)![0].cp">
+            <strong>{{ (selection$ | async)![1].cp }}</strong>
+          </td>
+        </tr>
+        <tr>
+          <td>Types</td>
+          <td>
+            @for (type of (selection$ | async)![0].types; track $index) {
+              <span class="{{ type | pokemonTypeColor }}">{{ type }}</span>
+            }
+          </td>
+          <td>
+            @for (type of (selection$ | async)![1].types; track $index) {
+              <span class="{{ type | pokemonTypeColor }}">{{ type }}</span>
+            }
+          </td>
+        </tr>
+        <tr>
+          <td>Rareté</td>
+          <td [innerHTML]="(selection$ | async)![0].rarity | pokemonRarity"></td>
+          <td [innerHTML]="(selection$ | async)![1].rarity | pokemonRarity"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+}
+
+<div class="center section">
+  <a (click)="goBack()" class="btn waves-effect waves-light">Retour à la liste</a>
+</div>

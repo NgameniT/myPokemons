@@ -1,0 +1,6 @@
+/* You can add global styles to this file, and also import other style files */
+
+/* Rareté : code couleur des étoiles */
+.rarity-bronze { color: #cd7f32; font-size: 1.4em; letter-spacing: 2px; }
+.rarity-silver { color: #aaa9ad; font-size: 1.4em; letter-spacing: 2px; }
+.rarity-gold   { color: #ffd700; font-size: 1.4em; letter-spacing: 2px; }

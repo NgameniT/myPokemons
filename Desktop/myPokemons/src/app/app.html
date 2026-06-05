@@ -1,0 +1,42 @@
+<nav>
+  <div class="nav-wrapper teal">
+
+    <!-- Titre à gauche -->
+    <a routerLink="/pokemon/all" class="brand-logo" style="padding-left: 16px;">
+      Application de pokémons
+    </a>
+
+    <!-- Menu à droite -->
+    <ul class="right hide-on-med-and-down">
+
+      @if (isLoggedIn()) {
+        <li><a routerLink="/pokemon/all">Liste</a></li>
+        <li><a routerLink="/pokemon/favorites">Favoris</a></li>
+        <li><a routerLink="/pokemon/compare">Comparer</a></li>
+
+        <!-- Icône compte avec sous-menu au survol -->
+        <li class="account-menu">
+          <a style="cursor: pointer;">
+            <i class="material-icons">account_circle</i>
+          </a>
+          <div class="submenu">
+            <div class="user-email">{{ getCurrentUser()?.email }}</div>
+            <a (click)="logout()" style="cursor: pointer;">
+              <i class="material-icons">logout</i> Déconnexion
+            </a>
+          </div>
+        </li>
+
+      } @else {
+        <li><a routerLink="/login">Se connecter</a></li>
+        <li><a routerLink="/register">S'inscrire</a></li>
+      }
+
+    </ul>
+  </div>
+</nav>
+
+<!-- [@pageTransition] : déclenche l'animation à chaque changement de route -->
+<div [@pageTransition]="routeState">
+  <router-outlet />
+</div>

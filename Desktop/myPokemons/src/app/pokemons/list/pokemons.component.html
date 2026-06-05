@@ -1,0 +1,56 @@
+<h1 class="center">Liste de pokémons</h1>
+
+<div class="center section">
+  <a (click)="addPokemon()" class="btn waves-effect waves-light teal">
+    + Ajouter un pokémon
+  </a>
+</div>
+
+<search-pokemon></search-pokemon>
+
+<filter-pokemon></filter-pokemon>
+
+<!-- Tri réactif : chaque bouton pousse un nouveau critère dans le BehaviorSubject -->
+<!-- combineLatest détecte le changement et map() retrie automatiquement -->
+<div class="center section">
+  <span style="margin-right: 10px; font-weight: bold;">Trier par :</span>
+  <a (click)="trierPar('id')"     class="btn-small waves-effect waves-light grey darken-1"    style="margin: 4px;">Numéro</a>
+  <a (click)="trierPar('name')"   class="btn-small waves-effect waves-light blue lighten-1"   style="margin: 4px;">Nom</a>
+  <a (click)="trierPar('hp')"     class="btn-small waves-effect waves-light green lighten-1"  style="margin: 4px;">Points de vie</a>
+  <a (click)="trierPar('cp')"     class="btn-small waves-effect waves-light orange lighten-1" style="margin: 4px;">Points de combat</a>
+  <a (click)="trierPar('rarity')" class="btn-small waves-effect waves-light purple lighten-1" style="margin: 4px;">Rareté</a>
+</div>
+
+<div class="container">
+  <!-- [@listeAnimation] : animation d'apparition en cascade à chaque nouveau tri -->
+  @if (pokemonsTries$ | async; as pokemons) {
+    <div class="row" [@listeAnimation]="pokemons.length">
+      @for (pokemon of pokemons; track pokemon.id) {
+        <div class="col s6 m4">
+          <pkmnBorderCard class="card horizontal" (click)="selectPokemon(pokemon)">
+
+            <div class="card-image">
+              <img [src]="pokemon.picture" alt="img">
+            </div>
+            <div class="card-stacked">
+              <div class="card-content">
+                <p>{{ pokemon.name }}</p>
+                <p><small>{{ pokemon.created | date: "dd/MM/yy"}}</small></p>
+                @for (type of pokemon.types; track $index) {
+                  <span class="{{ type | pokemonTypeColor }}">{{type}}</span>
+                }
+              </div>
+              <div class="card-action">
+                <a (click)="deletePokemon($event, pokemon)"
+                   class="btn-small waves-effect waves-light red">
+                  Supprimer
+                </a>
+              </div>
+            </div>
+
+          </pkmnBorderCard>
+        </div>
+      }
+    </div>
+  }
+</div>
